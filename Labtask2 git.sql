@@ -1,0 +1,42 @@
+
+
+CREATE DATABASE EmployeeDB;
+
+USE EmployeeDB;
+
+CREATE TABLE Departments (
+    DepartmentID INT PRIMARY KEY,
+    DepartmentName VARCHAR(100) NOT NULL UNIQUE,
+    Location VARCHAR(100) NULL
+);
+
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Email VARCHAR(100) UNIQUE,
+    HireDate DATE NOT NULL DEFAULT (CURRENT_DATE),
+    Salary DECIMAL(10,2),
+    CONSTRAINT chk_salary CHECK (Salary > 0)
+);
+
+ALTER TABLE Employees
+ADD PhoneNumber VARCHAR(15);
+
+ALTER TABLE Employees
+ADD CONSTRAINT chk_phone
+CHECK (
+    PhoneNumber IS NULL 
+    OR PhoneNumber REGEXP '^[0-9]{10}$'
+);
+
+DROP TABLE Employees;
+
+DROP TABLE Departments;
+
+SELECT 
+    CONSTRAINT_NAME,
+    CONSTRAINT_TYPE
+FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+WHERE TABLE_SCHEMA = 'EmployeeDB'
+AND TABLE_NAME = 'Employees';
